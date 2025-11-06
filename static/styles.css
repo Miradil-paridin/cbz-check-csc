@@ -1,0 +1,125 @@
+/*
+ * Custom styles for the Chinese text correction web UI.
+ *
+ * This stylesheet defines a responsive two-column layout with a clean
+ * aesthetic. It improves upon the original MVP by adding padding,
+ * rounded corners, and subtle colors to make the application more
+ * pleasant to use. All styles are self-contained and do not rely on
+ * external frameworks, ensuring offline availability.
+ */
+
+body {
+  font-family: "Segoe UI", "Microsoft Yahei", sans-serif;
+  margin: 40px;
+  line-height: 1.6;
+  color: #212529;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Flex container for two columns */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.left,
+.right {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Textarea styling */
+.left textarea {
+  width: 100%;
+  min-height: 240px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+/* Options styling */
+.options {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.options label {
+  margin-right: 12px;
+  display: inline-flex;
+  align-items: center;
+}
+.options input[type="checkbox"] {
+  margin-right: 4px;
+}
+
+/* Buttons styling */
+.buttons button {
+  margin-right: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.buttons button:hover {
+  background: #005dc3;
+}
+
+/* Result panel styling */
+.result {
+  background: #f9fafb;
+  border: 1px solid #e2e6ea;
+  padding: 16px;
+  border-radius: 4px;
+  min-height: 300px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+/* Individual issue card */
+.issue-card {
+  border-left: 4px solid #dc3545;
+  padding-left: 12px;
+  margin-bottom: 12px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+.issue-card .title {
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: #c82333;
+}
+.issue-card .suggest {
+  margin-top: 4px;
+  color: #0a58ca;
+}
+.issue-card .hint {
+  margin-top: 2px;
+  color: #6c757d;
+  font-size: 13px;
+}
+.highlight {
+  background-color: #fff3cd;
+  padding: 0 2px;
+  border-radius: 2px;
+}
