@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>中文错别字检测</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <h1>中文错别字检测与纠错</h1>
+  <div class="container">
+    <!-- 左侧输入与选项 -->
+    <div class="left">
+      <textarea id="txt" placeholder="在此输入或粘贴需要检测的文本……"></textarea>
+      <div class="options">
+        <label><input type="checkbox" id="m_rule" checked>基础规则</label>
+        <label><input type="checkbox" id="m_lex" checked>词典检错</label>
+        <label><input type="checkbox" id="m_pat" checked>高级规则</label>
+        <label><input type="checkbox" id="m_pos" checked>词性规则</label>
+        <label><input type="checkbox" id="m_csc" checked>拼写模型</label>
+      </div>
+      <div class="buttons">
+        <button onclick="runCheck()">检测文本</button>
+        <button onclick="exportReport()">导出报告</button>
+      </div>
+    </div>
+    <!-- 右侧结果展示 -->
+    <div class="right">
+      <div id="output" class="result">在这里显示检测结果…</div>
+    </div>
+  </div>
+
+  <script>
+    async function runCheck() {
+      const text = document.getElementById('txt').value;
+      const body = {
+        text: text,
+        modes: {
+          rule: document.getElementById('m_rule').checked,
+          lex: document.getElementById('m_lex').checked,
+          pat: document.getElementById('m_pat').checked,
+          pos: document.getElementById('m_pos').checked,
+          csc: document.getElementById('m_csc').checked
+        },
+        friendly: true
+      };
+      const out = document.getElementById('output');
+      out.textContent = '检测中，请稍候…';
+      try {
+        const res = await fetch('/api/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.friendly_issues) {
+          // 构建 HTML 列表
+          if (data.friendly_issues.length === 0) {
+            out.textContent = '未发现明显问题。';
+            return;
+          }
+          let html = '';
+          data.friendly_issues.forEach((it, idx) => {
+            html += `<div class="issue-card">
+              <div class="title">${idx + 1}. 【${it['问题类型']}】</div>
+              <div>位置：${it['位置']}</div>
+              <div>片段：<span class="highlight">${escapeHtml(it['片段'])}</span></div>
+              <div class="suggest">建议：${escapeHtml(it['建议'])}</div>
+              <div class="hint">说明：${escapeHtml(it['说明'])}</div>
+            </div>`;
+          });
+          out.innerHTML = html;
+        } else {
+          out.textContent = JSON.stringify(data, null, 2);
+        }
+      } catch (e) {
+        out.textContent = '检测失败：' + e;
+      }
+    }
+
+    async function exportReport() {
+      const text = document.getElementById('txt').value;
+      const modes = {
+        rule: document.getElementById('m_rule').checked,
+        lex: document.getElementById('m_lex').checked,
+        pat: document.getElementById('m_pat').checked,
+        pos: document.getElementById('m_pos').checked,
+        csc: document.getElementById('m_csc').checked
+      };
+      // 先获取完整 issues
+      try {
+        const resCheck = await fetch('/api/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, modes, friendly: false })
+        });
+        const dataCheck = await resCheck.json();
+        const issues = dataCheck.issues || [];
+        const res = await fetch('/api/report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ issues })
+        });
+        const j = await res.json();
+        if (j.download) {
+          window.open(j.download, '_blank');
+        } else {
+          alert('报告生成失败');
+        }
+      } catch (err) {
+        alert('生成报告时出错：' + err);
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+  </script>
+</body>
+</html>
