@@ -1,0 +1,23 @@
+Flask==3.0.3
+Jinja2==3.1.4
+jieba==0.42.1
+pypinyin==0.50.0
+PyYAML==6.0
+openpyxl==3.1.2
+# 使用 pycorrector 1.x，可与 MacBERT 模型配合使用
+pycorrector>=1.1,<2
+transformers==4.37.0
+# 建议使用适配的 torch 版本（如 2.1.x），根据硬件选择对应 CUDA 版本
+# 此处不固定具体版本，由用户根据环境自行安装
+
+# 项目依赖说明：
+# - Flask：提供 Web 服务接口和简单的前端页面。
+# - Jinja2：HTML 模板渲染引擎，与 Flask 配合使用。
+# - jieba：中文分词与词性标注，用于 POS 规则。
+# - pypinyin：提供汉字转拼音能力，可作为扩展使用。
+# - PyYAML：加载自定义规则的 YAML 文件。
+# - openpyxl：将检查结果导出为 Excel（XLSX）格式。
+# - pycorrector：集成 MacBERT4CSC 中文拼写纠错模型。
+#   注意：首次加载模型需要联网下载权重，之后可离线使用。
+# - transformers：支持直接加载 HuggingFace 权重，如需要可切换。
+# - torch：Transformer 模型的运行时依赖。
