@@ -1,0 +1,28 @@
+rules:
+  - id: pos_de_maybe_di
+    sequence:
+      - { tag: 'd' }    # 副词
+      - { word: '的' }
+      - { tag: 'v' }    # 动词
+    hint: '副词后通常用“地”连接动词，可能应为“地”。'
+    suggest: '将“的”改为“地”'
+    confidence: 0.6
+
+  - id: pos_di_maybe_de
+    sequence:
+      - { tag: 'a' }    # 形容词
+      - { word: '地' }
+      - { tag: 'n' }    # 名词
+    hint: '形容词后多接名词，应使用“的”而非“地”。'
+    suggest: '将“地”改为“的”'
+    confidence: 0.6
+
+  - id: pos_wrong_classifier_zhi
+    sequence:
+      - { regex: '一' }
+      - { word: '只' }
+      - { tag: 'n' }
+    hint: '量词可能不当，某些名词通常用“个/颗”等量词。'
+    suggest:
+      - '改用合适的量词，如“个”或“颗”'
+    confidence: 0.5

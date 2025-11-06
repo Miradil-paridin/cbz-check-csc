@@ -1,0 +1,70 @@
+rules:
+  # 因果重复：由于…因此…
+  - id: redundancy_youyu_yinci
+    kind: regex
+    pattern: '由于[^，。；]{0,40}?因此'
+    hint: '“由于…因此…”属于因果重复，去掉一个连接词即可。'
+    suggest:
+      - '可以改为“由于…，所以…”'
+      - '或改写为“因为…，所以…”'
+    confidence: 0.8
+    flags: ''
+
+  # 因果重复：因此…所以…
+  - id: redundancy_yinci_suoyi
+    kind: regex
+    pattern: '因此[^，。；]{0,40}?所以'
+    hint: '“因此…所以…”为因果重复，应保留一个。'
+    suggest: '去掉“因此”或“所以”之一'
+    confidence: 0.8
+
+  # 套话：进行…工作
+  - id: template_jinxing_gongzuo
+    kind: regex
+    pattern: '进行[^。；，]{0,20}?工作'
+    hint: '“进行…工作”套话较为冗余，可直接去掉“进行”。'
+    suggest: '删除“进行”，直接表达正在从事的行为'
+    confidence: 0.75
+
+  # 冗余：基于…的…（在非被动语境下常显累赘）
+  - id: redundancy_jiyu_de_de
+    kind: regex
+    pattern: '基于[^。；，]{0,20}?的[\u4e00-\u9fff]'
+    hint: '在非被动语境下，“基于…的…”常显累赘，可调整语序或去掉“的”。'
+    suggest:
+      - '重写句子结构，避免“基于…的…”'
+    confidence: 0.6
+
+  # 百分号前空格：如 5 % → 5%
+  - id: number_percent_space
+    kind: regex
+    pattern: '(\d+)\s+%'
+    hint: '百分号前不应有空格。'
+    suggest: '\\1%'
+    confidence: 0.9
+
+  # 人民币符号与数字之间空格：￥ 99 → ￥99
+  - id: rmb_space
+    kind: regex
+    pattern: '￥\s+(\d)'
+    hint: '人民币符号与数字之间不应留空格。'
+    suggest: '￥\\1'
+    confidence: 0.9
+
+  # 数字与单位间多余空格：如 10 km → 10km
+  - id: unit_space
+    kind: regex
+    pattern: '(\d+)\s+(km|kg|cm|mm|m|％)'
+    hint: '数字与单位之间不宜添加空格。'
+    suggest: '\\1\\2'
+    confidence: 0.8
+
+  # 示例量词错误：一只苹果 → 一颗苹果/一个苹果
+  - id: wrong_classifier_apple
+    kind: regex
+    pattern: '一只苹果'
+    hint: '“苹果”通常用量词“个/颗”，而非“只”。'
+    suggest:
+      - '一颗苹果'
+      - '一个苹果'
+    confidence: 0.6
